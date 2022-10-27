@@ -48,6 +48,8 @@ def parse_args():
     parser.add_argument('--step_size', type=int, default=10, help='Decay step for lr decay [default: every 10 epochs]')
     parser.add_argument('--lr_decay', type=float, default=0.7, help='Decay rate for lr decay [default: 0.7]')
     parser.add_argument('--test_area', type=int, default=5, help='Which area to use for test, option: 1-6 [default: 5]')
+    parser.add_argument('--data_root', '-d', type=str, default='data/stanford_indoor3d/', help='Set the path to the dataset directory [default: data/stanford_indoor3d/]')
+    parser.add_argument('--num_classes', '-k', type=int, default=13, help='Set the number of class to segment [default: 13]')
 
     return parser.parse_args()
 
@@ -88,8 +90,8 @@ def main(args):
     log_string('PARAMETER ...')
     log_string(args)
 
-    root = 'data/stanford_indoor3d/'
-    NUM_CLASSES = 13
+    root = args.data_root
+    NUM_CLASSES = args.num_classes
     NUM_POINT = args.npoint
     BATCH_SIZE = args.batch_size
 

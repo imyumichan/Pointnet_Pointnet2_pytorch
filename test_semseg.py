@@ -38,6 +38,7 @@ def parse_args():
     parser.add_argument('--visual', action='store_true', default=False, help='visualize result [default: False]')
     parser.add_argument('--test_area', type=int, default=5, help='area for testing, option: 1-6 [default: 5]')
     parser.add_argument('--num_votes', type=int, default=3, help='aggregate segmentation scores with voting [default: 5]')
+    parser.add_argument('--num_classes', '-k', type=int, default=13, help='Set the number of class to segment [default: 13]')
     return parser.parse_args()
 
 
@@ -75,7 +76,7 @@ def main(args):
     log_string('PARAMETER ...')
     log_string(args)
 
-    NUM_CLASSES = 13
+    NUM_CLASSES = args.num_classes
     BATCH_SIZE = args.batch_size
     NUM_POINT = args.num_point
 
