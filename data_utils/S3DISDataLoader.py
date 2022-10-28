@@ -6,9 +6,10 @@ from torch.utils.data import Dataset
 
 
 class S3DISDataset(Dataset):
-    def __init__(self, split='train', data_root='trainval_fullarea', num_point=4096, test_area=5, block_size=1.0, sample_rate=1.0, transform=None):
+    def __init__(self, split='train', data_root='trainval_fullarea', num_point=4096, num_class=13, test_area=5, block_size=1.0, sample_rate=1.0, transform=None):
         super().__init__()
         self.num_point = num_point
+        self.num_class = num_class
         self.block_size = block_size
         self.transform = transform
         rooms = sorted(os.listdir(data_root))
@@ -21,13 +22,13 @@ class S3DISDataset(Dataset):
         self.room_points, self.room_labels = [], []
         self.room_coord_min, self.room_coord_max = [], []
         num_point_all = []
-        labelweights = np.zeros(13)
+        labelweights = np.zeros(num_class)
 
         for room_name in tqdm(rooms_split, total=len(rooms_split)):
             room_path = os.path.join(data_root, room_name)
             room_data = np.load(room_path)  # xyzrgbl, N*7
             points, labels = room_data[:, 0:6], room_data[:, 6]  # xyzrgb, N*6; l, N
-            tmp, _ = np.histogram(labels, range(14))
+            tmp, _ = np.histogram(labels, range(self.num_class+1))
             labelweights += tmp
             coord_min, coord_max = np.amin(points, axis=0)[:3], np.amax(points, axis=0)[:3]
             self.room_points.append(points), self.room_labels.append(labels)
