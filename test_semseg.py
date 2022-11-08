@@ -39,6 +39,7 @@ def parse_args():
     parser.add_argument('--test_area', type=int, default=5, help='area for testing, option: 1-6 [default: 5]')
     parser.add_argument('--num_votes', type=int, default=3, help='aggregate segmentation scores with voting [default: 5]')
     parser.add_argument('--num_classes', '-k', type=int, default=13, help='Set the number of class to segment [default: 13]')
+    parser.add_argument('--data_root', '-d', type=str, default='data/stanford_indoor3d/', help='Set the path to the dataset directory [default: data/stanford_indoor3d/]')
     return parser.parse_args()
 
 
@@ -80,9 +81,9 @@ def main(args):
     BATCH_SIZE = args.batch_size
     NUM_POINT = args.num_point
 
-    root = 'data/s3dis/stanford_indoor3d/'
+    root = args.data_root
 
-    TEST_DATASET_WHOLE_SCENE = ScannetDatasetWholeScene(root, split='test', test_area=args.test_area, block_points=NUM_POINT)
+    TEST_DATASET_WHOLE_SCENE = ScannetDatasetWholeScene(root, split='test', test_area=args.test_area, block_points=NUM_POINT, block_size=2.0, stride=1.0)
     log_string("The number of test data is: %d" % len(TEST_DATASET_WHOLE_SCENE))
 
     '''MODEL LOADING'''
