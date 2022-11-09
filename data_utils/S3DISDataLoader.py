@@ -85,8 +85,9 @@ class S3DISDataset(Dataset):
 
 class ScannetDatasetWholeScene():
     # prepare to give prediction on each points
-    def __init__(self, root, block_points=4096, split='test', test_area=5, stride=0.5, block_size=1.0, padding=0.001):
+    def __init__(self, root, block_points=4096, num_class=13, split='test', test_area=5, stride=0.5, block_size=1.0, padding=0.001):
         self.block_points = block_points
+        self.num_class = num_class
         self.block_size = block_size
         self.padding = padding
         self.root = root
@@ -110,9 +111,9 @@ class ScannetDatasetWholeScene():
             self.room_coord_min.append(coord_min), self.room_coord_max.append(coord_max)
         assert len(self.scene_points_list) == len(self.semantic_labels_list)
 
-        labelweights = np.zeros(2)
+        labelweights = np.zeros(self.num_class)
         for seg in self.semantic_labels_list:
-            tmp, _ = np.histogram(seg, range(3))
+            tmp, _ = np.histogram(seg, range(self.num_class+1))
             self.scene_points_num.append(seg.shape[0])
             labelweights += tmp
         labelweights = labelweights.astype(np.float32)

@@ -51,6 +51,7 @@ def parse_args():
     parser.add_argument('--test_area', type=int, default=5, help='Which area to use for test, option: 1-6 [default: 5]')
     parser.add_argument('--data_root', '-d', type=str, default='data/stanford_indoor3d/', help='Set the path to the dataset directory [default: data/stanford_indoor3d/]')
     parser.add_argument('--num_classes', '-k', type=int, default=13, help='Set the number of class to segment [default: 13]')
+    parser.add_argument('--block_size', type=float, default=1.0, help='Set the block size [default: 1.0]')
 
     return parser.parse_args()
 
@@ -98,10 +99,10 @@ def main(args):
 
     print("start loading training data ...")
     TRAIN_DATASET = S3DISDataset(split='train', data_root=root, num_point=NUM_POINT, num_class=NUM_CLASSES,
-                                 test_area=args.test_area, block_size=2.0, sample_rate=1.0, transform=None)
+                                 test_area=args.test_area, block_size=args.block_size, sample_rate=1.0, transform=None)
     print("start loading test data ...")
     TEST_DATASET = S3DISDataset(split='test', data_root=root, num_point=NUM_POINT, num_class=NUM_CLASSES,
-                                test_area=args.test_area, block_size=2.0, sample_rate=1.0, transform=None)
+                                test_area=args.test_area, block_size=args.block_size, sample_rate=1.0, transform=None)
 
     trainDataLoader = torch.utils.data.DataLoader(TRAIN_DATASET, batch_size=BATCH_SIZE, shuffle=True, num_workers=10,
                                                   pin_memory=True, drop_last=True,

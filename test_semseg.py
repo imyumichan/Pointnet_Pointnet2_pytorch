@@ -19,8 +19,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = BASE_DIR
 sys.path.append(os.path.join(ROOT_DIR, 'models'))
 
-classes = ['ceiling', 'floor', 'wall', 'beam', 'column', 'window', 'door', 'table', 'chair', 'sofa', 'bookcase',
-           'board', 'clutter']
+classes = ['background', 'track']
+# classes = ['ceiling', 'floor', 'wall', 'beam', 'column', 'window', 'door', 'table', 'chair', 'sofa', 'bookcase',
+#            'board', 'clutter']
 class2label = {cls: i for i, cls in enumerate(classes)}
 seg_classes = class2label
 seg_label_to_cat = {}
@@ -39,6 +40,7 @@ def parse_args():
     parser.add_argument('--test_area', type=int, default=5, help='area for testing, option: 1-6 [default: 5]')
     parser.add_argument('--num_votes', type=int, default=3, help='aggregate segmentation scores with voting [default: 5]')
     parser.add_argument('--num_classes', '-k', type=int, default=13, help='Set the number of class to segment [default: 13]')
+    parser.add_argument('--block_size', type=float, default=1.0, help='Set the block size [default: 1.0]')
     parser.add_argument('--data_root', '-d', type=str, default='data/stanford_indoor3d/', help='Set the path to the dataset directory [default: data/stanford_indoor3d/]')
     return parser.parse_args()
 
@@ -83,7 +85,7 @@ def main(args):
 
     root = args.data_root
 
-    TEST_DATASET_WHOLE_SCENE = ScannetDatasetWholeScene(root, split='test', test_area=args.test_area, block_points=NUM_POINT, block_size=2.0, stride=1.0)
+    TEST_DATASET_WHOLE_SCENE = ScannetDatasetWholeScene(root, split='test', test_area=args.test_area, block_points=NUM_POINT, num_class=NUM_CLASSES, block_size=args.block_size, stride=args.block_size/2)
     log_string("The number of test data is: %d" % len(TEST_DATASET_WHOLE_SCENE))
 
     '''MODEL LOADING'''
